@@ -105,6 +105,7 @@ sudo cp ./stubs/fastcgi.conf -rf /etc/apache2/mods-available/fastcgi.conf
 echo "$(tput setaf 2)$(tput bold)Install Nginx... $(tput sgr 0)"
 sudo apt-get -y install nginx
 sudo rm /etc/nginx/sites-enabled/default
+sudo ufw allow 'Nginx Full'
 
 # reverse proxy setup
 echo "$(tput setaf 2)$(tput bold)Install rpaf... $(tput sgr 0)"
