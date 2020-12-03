@@ -48,7 +48,7 @@ fi
 
 # fail 2 ban
 echo "$(tput setaf 2)$(tput bold)Install securities... $(tput sgr 0)"
-sudo apt-get -y install fail2ban unattended-upgrades landscape-common
+sudo apt-get -y install fail2ban unattended-upgrades landscape-common net-tools
 
 # firewall
 echo "$(tput setaf 2)$(tput bold)Setup Firewall... $(tput sgr 0)"
@@ -68,6 +68,7 @@ sudo apt-get -y install git tmux vim curl wget zip unzip htop dos2unix whois bc
 echo "$(tput setaf 2)$(tput bold)Create sftp user group... $(tput sgr 0)"
 sudo addgroup -q --system sftpUsers
 sudo cp ./stubs/sftpUsers.conf /etc/ssh/sshd_config.d/sftpUsers.conf
+sudo sed -i "s#/usr/lib/openssh/sftp-server#internal-sftp#g" /etc/ssh/sshd_config
 sudo service ssh reload
 
 # apache
@@ -160,7 +161,7 @@ sudo systemctl enable redis-server
 
 # Let's Encrypt (Using certbot-auto to always have latest version)
 echo "$(tput setaf 2)$(tput bold)Install Let's Encrypt... $(tput sgr 0)"
-sudo apt-get install -y certbot python3-certbot-apache
+sudo apt-get install -y certbot python3-certbot-nginx
 sudo cp ./stubs/cron-certbot /etc/cron.d/certbot
 # sudo certbot --install-only --non-interactive
 
@@ -169,10 +170,10 @@ echo "$(tput setaf 2)$(tput bold)Generate dhparam.pem... $(tput sgr 0)"
 sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 # Laravel Installer
-echo "$(tput setaf 2)$(tput bold)Install Laravel installer... $(tput sgr 0)"
-composer global require "laravel/installer"
-echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
-source ~/.bashrc
+# echo "$(tput setaf 2)$(tput bold)Install Laravel installer... $(tput sgr 0)"
+# composer global require "laravel/installer"
+# echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
+# source ~/.bashrc
 
 # Wp Installer
 echo "$(tput setaf 2)$(tput bold)Install WP Cli... $(tput sgr 0)"
