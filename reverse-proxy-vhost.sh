@@ -11,6 +11,7 @@ PROTECTED=false
 HOME_DIR="/var/www/${USER}/"
 VHOST_DIR="${DOMAIN}/"
 SERVED_DIR=
+DB_NAME=
 
 # Add User
 . ./operations/create-user.sh
@@ -28,6 +29,9 @@ POOL_FILE="/etc/php/7.4/fpm/pool.d/${USER}.conf"
 CONF_FILE="/etc/nginx/sites-available/${DOMAIN}"
 APACHE_FILE="/etc/apache2/sites-available/${DOMAIN}.conf"
 . ./operations/create-apache-nginx-conf.sh
+
+# database
+. ./operations/create-database.sh
 
 # reload
 . ./operations/test-and-reload.sh

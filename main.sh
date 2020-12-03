@@ -12,9 +12,9 @@ sudo apt install -y update-manager-core
 sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
 # secondary user
-# echo "$(tput setaf 2)$(tput bold)Setup secondary sudo user... $(tput sgr 0)"
-# sudo adduser --gecos "" gummi
-# sudo usermod -aG sudo gummi
+echo "$(tput setaf 2)$(tput bold)Setup secondary sudo user... $(tput sgr 0)"
+sudo adduser --gecos "" serveradmin
+sudo usermod -aG sudo serveradmin
 
 # update server
 echo "$(tput setaf 2)$(tput bold)Update apt repositories... $(tput sgr 0)"
@@ -107,6 +107,7 @@ echo "$(tput setaf 2)$(tput bold)Install Nginx... $(tput sgr 0)"
 sudo apt-get -y install nginx
 sudo rm /etc/nginx/sites-enabled/default
 sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
 
 # reverse proxy setup
 echo "$(tput setaf 2)$(tput bold)Install rpaf... $(tput sgr 0)"
@@ -137,6 +138,18 @@ sudo apt-get -y install mysql-server
 
 echo "$(tput setaf 2)$(tput bold)Config Mysql... $(tput sgr 0)"
 sudo mysql_secure_installation
+
+MYSQL_CONF_FILE="$HOME/.my.cnf"
+NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+
+sudo cp ./stubs/my.conf $MYSQL_CONF_FILE
+sudo chown root: $CONF_FILE
+sudo sed -i "s/{{PASSWORD}}/${NEW_UUID}/g" $CONF_FILE
+sudo sed -i "s/{{USER}}/${USER}/g" $CONF_FILE
+
+sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${NEW_UUID}';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${USER}'@'localhost' WITH GRANT OPTION;"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 # compposer
 echo "$(tput setaf 2)$(tput bold)Install Composer... $(tput sgr 0)"
