@@ -21,7 +21,7 @@ SERVED_PATH="${VHOST_PATH}public_html/${SERVED_DIR}"
 . ./operations/create-path.sh
 
 # pool
-POOL_FILE="/etc/php/7.7/fpm/pool.d/${USER}.conf"
+POOL_FILE="/etc/php/7.4/fpm/pool.d/${USER}.conf"
 . ./operations/create-fpm-pool.sh
 
 # nginx conf

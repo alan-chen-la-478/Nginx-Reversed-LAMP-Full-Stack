@@ -9,7 +9,7 @@ sudo apt-get -y update
 sudo apt-get -y upgrade
 sudo apt-get -y dist-upgrade
 sudo apt install -y update-manager-core
-sudo do-release-upgrade -d
+sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
 # secondary user
 # echo "$(tput setaf 2)$(tput bold)Setup secondary sudo user... $(tput sgr 0)"
@@ -19,14 +19,14 @@ sudo do-release-upgrade -d
 # update server
 echo "$(tput setaf 2)$(tput bold)Update apt repositories... $(tput sgr 0)"
 sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y ppa:nginx/development
-sudo add-apt-repository -y ppa:ondrej/php
-sudo add-apt-repository -y ppa:ondrej/apache2
-sudo add-apt-repository -y ppa:chris-lea/redis-server
-sudo add-apt-repository -y main
-sudo add-apt-repository -y universe
-sudo add-apt-repository -y restricted
-sudo add-apt-repository -y multiverse
+# sudo add-apt-repository -y ppa:nginx/development
+# sudo add-apt-repository -y ppa:ondrej/php
+# sudo add-apt-repository -y ppa:ondrej/apache2
+# sudo add-apt-repository -y ppa:chris-lea/redis-server
+# sudo add-apt-repository -y main
+# sudo add-apt-repository -y universe
+# sudo add-apt-repository -y restricted
+# sudo add-apt-repository -y multiverse
 
 sudo apt-get -y update
 sudo apt-get -y upgrade
@@ -52,9 +52,7 @@ sudo apt-get -y install fail2ban unattended-upgrades landscape-common
 
 # firewall
 echo "$(tput setaf 2)$(tput bold)Setup Firewall... $(tput sgr 0)"
-sudo ufw allow ssh
-sudo ufw allow http
-sudo ufw allow https
+sudo ufw allow OpenSSH
 sudo ufw --force enable
 
 # timezone
@@ -69,7 +67,6 @@ sudo apt-get -y install git tmux vim curl wget zip unzip htop dos2unix whois bc
 # Enable sftp
 echo "$(tput setaf 2)$(tput bold)Create sftp user group... $(tput sgr 0)"
 sudo addgroup -q --system sftpUsers
-sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.back
 sudo cp ./stubs/sftpUsers.conf /etc/ssh/sshd_config.d/sftpUsers.conf
 sudo service ssh reload
 
@@ -95,9 +92,6 @@ sudo apt-get -y install php-fpm php-cli php-gd php-mysql
 sudo apt-get -y install php-pgsql php-imap php-memcached php-mbstring php-xml
 sudo apt-get -y install php-curl php-bcmath php-sqlite3 php-xdebug php-zip
 ps aux | grep php
-
-# update some ini setting
-sudo sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 8M/" /etc/php/7.1/fpm/php.ini
 
 # connect apache to php
 sudo a2enmod actions
@@ -165,7 +159,7 @@ sudo systemctl enable redis-server
 
 # Let's Encrypt (Using certbot-auto to always have latest version)
 echo "$(tput setaf 2)$(tput bold)Install Let's Encrypt... $(tput sgr 0)"
-sudo apt-get install -y letsencrypt
+sudo apt-get install -y certbot python3-certbot-apache
 sudo cp ./stubs/cron-certbot /etc/cron.d/certbot
 # sudo certbot --install-only --non-interactive
 
