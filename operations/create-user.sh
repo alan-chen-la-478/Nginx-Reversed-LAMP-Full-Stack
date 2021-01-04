@@ -15,13 +15,13 @@ if [ -z "$(getent passwd $USER)" ]; then
 
     echo "User: '$USER' created."
 
-    MYSQL_CONF_FILE=$HOME_DIR/.my.cnf
+    MYSQL_CONF_FILE="${HOME_DIR}.my.cnf"
     NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
     sudo cp ./stubs/my.conf $MYSQL_CONF_FILE
-    sudo chown root: $CONF_FILE
-    sudo sed -i "s/{{PASSWORD}}/${NEW_UUID}/g" $CONF_FILE
-    sudo sed -i "s/{{USER}}/${USER}/g" $CONF_FILE
+    sudo chown root: $MYSQL_CONF_FILE
+    sudo sed -i "s/{{PASSWORD}}/${NEW_UUID}/g" $MYSQL_CONF_FILE
+    sudo sed -i "s/{{USER}}/${USER}/g" $MYSQL_CONF_FILE
 
     sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${NEW_UUID}';"
     sudo mysql -e "GRANT ALL PRIVILEGES ON \`${USER}_%\`.* TO '${USER}'@'localhost';"

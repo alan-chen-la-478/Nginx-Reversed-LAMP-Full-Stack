@@ -13,13 +13,13 @@ VHOST_DIR="${DOMAIN}/"
 SERVED_DIR=
 DB_NAME=
 
-# Add User
-. ./operations/create-user.sh
-
 # path
 VHOST_PATH="${HOME_DIR}${VHOST_DIR}"
 SERVED_PATH="${VHOST_PATH}public_html/${SERVED_DIR}"
 . ./operations/create-path.sh
+
+# Add User
+. ./operations/create-user.sh
 
 # pool
 POOL_FILE="/etc/php/7.4/fpm/pool.d/${USER}.conf"

@@ -37,7 +37,7 @@ else
     sudo sed -i "s/{{DOMAIN}}/${DOMAIN}/g" $APACHE_FILE
     sudo sed -i "s#{{SERVED_PATH}}#${SERVED_PATH}#g" $APACHE_FILE
     sudo sed -i "s#{{ROOT}}#${VHOST_PATH}#g" $APACHE_FILE
-    sudo sed -i "s#{{SOCKET}}#/var/run/php/php7.1-fpm-${USER}.sock#g" $APACHE_FILE
+    sudo sed -i "s#{{SOCKET}}#/var/run/php/php7.4-fpm-${USER}.sock#g" $APACHE_FILE
 
     echo "'$APACHE_FILE' created."
 fi

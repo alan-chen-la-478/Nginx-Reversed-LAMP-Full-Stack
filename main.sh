@@ -12,9 +12,9 @@ sudo apt install -y update-manager-core
 sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
 # secondary user
-echo "$(tput setaf 2)$(tput bold)Setup secondary sudo user... $(tput sgr 0)"
-sudo adduser --gecos "" serveradmin
-sudo usermod -aG sudo serveradmin
+# echo "$(tput setaf 2)$(tput bold)Setup secondary sudo user... $(tput sgr 0)"
+# sudo adduser --gecos "" serveradmin
+# sudo usermod -aG sudo serveradmin
 
 # update server
 echo "$(tput setaf 2)$(tput bold)Update apt repositories... $(tput sgr 0)"
@@ -88,7 +88,7 @@ sudo hostnamectl set-hostname localhost
 sudo service apache2 restart
 
 # php 7
-echo "$(tput setaf 2)$(tput bold)Install PHP7.1... $(tput sgr 0)"
+echo "$(tput setaf 2)$(tput bold)Install PHP... $(tput sgr 0)"
 sudo apt-get -y install php-fpm php-cli php-gd php-mysql
 sudo apt-get -y install php-pgsql php-imap php-memcached php-mbstring php-xml
 sudo apt-get -y install php-curl php-bcmath php-sqlite3 php-xdebug php-zip
@@ -143,9 +143,9 @@ MYSQL_CONF_FILE="$HOME/.my.cnf"
 NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 sudo cp ./stubs/my.conf $MYSQL_CONF_FILE
-sudo chown root: $CONF_FILE
-sudo sed -i "s/{{PASSWORD}}/${NEW_UUID}/g" $CONF_FILE
-sudo sed -i "s/{{USER}}/${USER}/g" $CONF_FILE
+sudo chown root: $MYSQL_CONF_FILE
+sudo sed -i "s/{{PASSWORD}}/${NEW_UUID}/g" $MYSQL_CONF_FILE
+sudo sed -i "s/{{USER}}/${USER}/g" $MYSQL_CONF_FILE
 
 sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${NEW_UUID}';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${USER}'@'localhost' WITH GRANT OPTION;"
