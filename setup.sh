@@ -16,6 +16,10 @@ then
     groupadd pwdfree
 fi
 
+cd /home/serveradmin
+git pull https://github.com/alan-chen-la-478/Nginx-Reversed-LAMP-Full-Stack.git server-setup
+chown -R serveradmin: server-setup
+cd server-setup
 su serveradmin
 
 # echo "$(tput setaf 2)$(tput bold)Switching to secondary sudo user... $(tput sgr 0)"
