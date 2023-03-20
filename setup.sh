@@ -17,7 +17,7 @@ then
 fi
 
 cd /home/serveradmin
-git pull https://github.com/alan-chen-la-478/Nginx-Reversed-LAMP-Full-Stack.git server-setup
+git pull https://github.com/alan-chen-la-478/Nginx-Reversed-LAMP-Full-Stack.git
 chown -R serveradmin: server-setup
 cd server-setup
 su serveradmin
