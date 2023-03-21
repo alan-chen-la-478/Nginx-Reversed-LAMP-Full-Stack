@@ -24,3 +24,13 @@ wait-for() {
         fi
     done
 }
+
+apt-command() {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    sudo apt --yes --quiet --option Dpkg::Options::=--force-confold --option Dpkg::Options::=--force-confdef "$@"
+}
+
+apt-install() {
+    apt-command install "$@"
+}
