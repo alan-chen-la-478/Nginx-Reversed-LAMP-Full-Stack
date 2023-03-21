@@ -1,6 +1,7 @@
 #!/bin/bash
 
 heading() {
+    echo ""
     echo "$(tput setaf 2)$(tput bold)${1}$(tput sgr 0)"
 }
 
