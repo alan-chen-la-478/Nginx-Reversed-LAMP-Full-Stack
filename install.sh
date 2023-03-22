@@ -7,26 +7,26 @@ heading 'Prepare to start...'
 lsb_release -a
 
 heading 'Updating Ubuntu...'
-sudo apt-get -y update ## >/dev/null 2>&1
-sudo apt-get -y upgrade ## >/dev/null 2>&1
-sudo apt-get -y dist-upgrade ## >/dev/null 2>&1
-sudo apt install -y update-manager-core
+apt-update ## >/dev/null 2>&1
+apt-upgrade ## >/dev/null 2>&1
+apt-dist-upgrade ## >/dev/null 2>&1
+apt-install update-manager-core
 sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
 heading 'Update apt repositories...'
 sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y ppa:nginx/development ## >/dev/null 2>&1
+sudo add-apt-repository -y ppa:ondrej/nginx ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:ondrej/php ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:ondrej/apache2 ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:chris-lea/redis-server ## >/dev/null 2>&1
 
 # do one more update run after repos added
-sudo apt-get -y update ## >/dev/null 2>&1
-sudo apt-get -y upgrade ## >/dev/null 2>&1
-sudo apt-get -y dist-upgrade ## >/dev/null 2>&1
+apt-update ## >/dev/null 2>&1
+apt-upgrade ## >/dev/null 2>&1
+apt-dist-upgrade ## >/dev/null 2>&1
 
 # hold the pending kernel update warnning
-# sudo apt-mark hold linux-image-generic ## >/dev/null 2>&1
+sudo apt-mark hold linux-image-generic ## >/dev/null 2>&1
 # echo 'APT::ExtractTemplates::TempDir "/dev/null";' | sudo tee /etc/apt/apt.conf ## >/dev/null 2>&1
 # echo 'APT::ExtractTemplates::TempDir "/dev/null";' | sudo tee /etc/apt/apt.conf ## >/dev/null 2>&1
 # echo '$nrconf{kernelhints} = -1;' | sudo tee /etc/needrestart/conf.d/kernelhints.conf ## >/dev/null 2>&1
@@ -74,24 +74,16 @@ sudo hostnamectl set-hostname localhost
 sudo service apache2 restart
 
 heading "Install PHP 7.4..."
-apt-install php7.4 php7.4-fpm php7.4-cli php7.4-gd php7.4-mysql
-apt-install php7.4-pgsql php7.4-imap php7.4-memcached php7.4-mbstring php7.4-xml
-apt-install php7.4-curl php7.4-bcmath php7.4-sqlite3 php7.4-xdebug php7.4-zip
+install-php 7.4
 
 heading "Install PHP 8.0..."
-apt-install php8.0 php8.0-fpm php8.0-cli php8.0-gd php8.0-mysql
-apt-install php8.0-pgsql php8.0-imap php8.0-memcached php8.0-mbstring php8.0-xml
-apt-install php8.0-curl php8.0-bcmath php8.0-sqlite3 php8.0-xdebug php8.0-zip
+install-php 8.0
 
 heading "Install PHP 8.1..."
-apt-install php8.1 php8.1-fpm php8.1-cli php8.1-gd php8.1-mysql
-apt-install php8.1-pgsql php8.1-imap php8.1-memcached php8.1-mbstring php8.1-xml
-apt-install php8.1-curl php8.1-bcmath php8.1-sqlite3 php8.1-xdebug php8.1-zip
+install-php 8.1
 
 heading "Install PHP 8.2..."
-apt-install php8.2 php8.2-fpm php8.2-cli php8.2-gd php8.2-mysql
-apt-install php8.2-pgsql php8.2-imap php8.2-memcached php8.2-mbstring php8.2-xml
-apt-install php8.2-curl php8.2-bcmath php8.2-sqlite3 php8.2-xdebug php8.2-zip
+install-php 8.2
 
 sudo a2enmod actions
 sudo a2enmod proxy_fcgi setenvif
@@ -103,6 +95,7 @@ sudo a2enconf php7.4-fpm php8.0-fpm php8.1-fpm php8.2-fpm
 # sudo cp ./stubs/fastcgi.conf -rf /etc/apache2/mods-available/fastcgi.conf
 
 update-alternatives --set php $(update-alternatives --list php | tail -n 1) ## >/dev/null 2>&1
+php -v
 
 heading "Install Nginx..."
 apt-install nginx
@@ -203,9 +196,9 @@ sudo cp ./snippets/proxy-params.conf /etc/nginx/snippets/proxy-params.conf
 
 heading "Cleaning up..."
 sudo apt-get -y autoremove
-sudo apt-get -y update
-sudo apt-get -y upgrade
-sudo apt-get -y dist-upgrade
+apt-update
+apt-upgrade
+apt-dist-upgrade
 retest
 restart
 
