@@ -38,7 +38,7 @@ heading "Install fail2ban and adding your current IP: $(who -m | awk '{print $NF
 apt-install fail2ban unattended-upgrades landscape-common net-tools
 sudo systemctl enable fail2ban
 sudo systemctl start fail2ban
-sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
+# sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
 
 heading "Setup ufw Firewall..."
 apt-install ufw

@@ -39,4 +39,7 @@ usermod -aG pwdfree $USERNAME ## >/dev/null 2>&1
 sudo -u $USERNAME bash ./install.sh
 deluser $USERNAME pwdfree ## >/dev/null 2>&1
 
+sudo systemctl start fail2ban
+sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
+
 heading '✨ DONE!!'

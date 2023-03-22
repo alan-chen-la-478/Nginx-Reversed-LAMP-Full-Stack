@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # configurations
-DOMAIN=domain.com
-USER=account_name
-WWW=true
+DOMAIN=test3.devssite.work
+USER=devssite
+WWW=false
 SSH=false
 SFTP=true
 SSL=true
@@ -12,17 +12,25 @@ HOME_DIR="/var/www/${USER}/"
 VHOST_DIR="${DOMAIN}/"
 SERVED_DIR=
 DB_NAME=
+PHP_VERSION=8.2
+LETSENCRYPT_TYPE=dns
+LETSENCRYPT_TOKEN=xxx
+WORDPRESS=true
+WORDPRESS_ADMIN=test4_devssite
+WORDPRESS_EMAIL="no-reply@${DOMAIN}"
+
+. ./helpers.sh
+
+# Add User
+. ./operations/create-user.sh
 
 # path
 VHOST_PATH="${HOME_DIR}${VHOST_DIR}"
 SERVED_PATH="${VHOST_PATH}public_html/${SERVED_DIR}"
 . ./operations/create-path.sh
 
-# Add User
-. ./operations/create-user.sh
-
 # pool
-POOL_FILE="/etc/php/7.4/fpm/pool.d/${USER}.conf"
+POOL_FILE="/etc/php/${PHP_VERSION}/fpm/pool.d/${USER}.conf"
 . ./operations/create-fpm-pool.sh
 
 # nginx conf
@@ -46,6 +54,9 @@ CONF_FILE="/etc/nginx/sites-available/${DOMAIN}"
 
 # password
 . ./operations/create-protected.sh
+
+# wordpress
+. ./operations/create-wordpress.sh
 
 # reload
 . ./operations/test-and-reload.sh

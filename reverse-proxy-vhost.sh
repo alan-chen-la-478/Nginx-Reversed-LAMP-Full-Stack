@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # configurations
-DOMAIN=test1.devssite.work
+DOMAIN=test6.devssite.work
 USER=devssite
 WWW=false
 SSH=false
@@ -15,6 +15,9 @@ DB_NAME=test1
 PHP_VERSION=8.2
 LETSENCRYPT_TYPE=dns
 LETSENCRYPT_TOKEN=xxx
+WORDPRESS=true
+WORDPRESS_ADMIN=test4_devssite
+WORDPRESS_EMAIL="no-reply@${DOMAIN}"
 
 # ===============
 
@@ -54,6 +57,9 @@ APACHE_FILE="/etc/apache2/sites-available/${DOMAIN}.conf"
 
 # password
 . ./operations/create-protected.sh
+
+# wordpress
+. ./operations/create-wordpress.sh
 
 # reload
 . ./operations/test-and-reload.sh

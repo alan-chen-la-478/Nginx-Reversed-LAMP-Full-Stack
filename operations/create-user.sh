@@ -26,7 +26,7 @@ if [ -z "$(getent passwd $USER)" ]; then
     sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${NEW_UUID}';"
     sudo mysql -e "GRANT ALL PRIVILEGES ON \`${USER}_%\`.* TO '${USER}'@'localhost';"
 
-    echo "MySQL User: '$USER' | '$NEW_UUID' created."
+    echo "MySQL User: '$USER' | '$NEW_UUID' created. | $MYSQL_CONF_FILE"
 else
     echo "User: '$USER' already exists."
 fi
