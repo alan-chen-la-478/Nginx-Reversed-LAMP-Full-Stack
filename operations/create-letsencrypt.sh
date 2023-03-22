@@ -2,10 +2,27 @@
 
 if [ "$SSL" = true ] ; then
     echo "$(tput setaf 2)$(tput bold)Creating SSL certificates... $(tput sgr 0)"
-    sudo certbot certonly --nginx -d ${DOMAIN} --agree-tos
 
-    if [ "$WWW" = true ]; then
-        sudo certbot certonly --nginx -d "www.${DOMAIN}" --agree-tos
+    if [ "$LETSENCRYPT_TYPE" = 'http' ] ; then
+        sudo certbot certonly --nginx -d ${DOMAIN} --agree-tos
+
+        if [ "$WWW" = true ]; then
+            sudo certbot certonly --nginx -d "www.${DOMAIN}" --agree-tos
+        fi
+    fi
+
+    if [ "$LETSENCRYPT_TYPE" = 'dns' ] ; then
+        LETSENCRYPT_INI_FILE="${VHOST_PATH}letsencrypt-${DOMAIN}.ini"
+        sudo cp ./stubs/cloudflare.ini $LETSENCRYPT_INI_FILE
+        sudo chown root: $LETSENCRYPT_INI_FILE
+        sudo chmod 600 $LETSENCRYPT_INI_FILE
+        sudo sed -i "s/{{TOKEN}}/${LETSENCRYPT_TOKEN}/g" $LETSENCRYPT_INI_FILE
+
+        sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials $LETSENCRYPT_INI_FILE -d ${DOMAIN} --agree-tos
+
+        if [ "$WWW" = true ]; then
+            sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials $LETSENCRYPT_INI_FILE -d "www.${DOMAIN}" --agree-tos
+        fi
     fi
 
     # redirect
@@ -23,9 +40,8 @@ if [ "$SSL" = true ] ; then
     sudo sed -i "s/# ssl_trusted_certificate /ssl_trusted_certificate /g" $CONF_FILE
     sudo sed -i "s/# include snippets\/nginx-ssl.conf/include snippets\/nginx-ssl.conf/g" $CONF_FILE
 
-    sudo nginx -t
-    sudo service php7.4-fpm reload
-    sudo service nginx reload
+    retest
+    reload
 
     echo "'SSL Certivicates' created."
 fi

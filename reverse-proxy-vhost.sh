@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # configurations
-DOMAIN=domain.com
-USER=account_name
-WWW=true
+DOMAIN=test1.devssite.work
+USER=devssite
+WWW=false
 SSH=false
 SFTP=true
 SSL=true
@@ -11,18 +11,25 @@ PROTECTED=false
 HOME_DIR="/var/www/${USER}/"
 VHOST_DIR="${DOMAIN}/"
 SERVED_DIR=
-DB_NAME=
+DB_NAME=test1
+PHP_VERSION=8.2
+LETSENCRYPT_TYPE=dns
+LETSENCRYPT_TOKEN=xxx
+
+# ===============
+
+. ./helpers.sh
+
+# Add User
+. ./operations/create-user.sh
 
 # path
 VHOST_PATH="${HOME_DIR}${VHOST_DIR}"
 SERVED_PATH="${VHOST_PATH}public_html/${SERVED_DIR}"
 . ./operations/create-path.sh
 
-# Add User
-. ./operations/create-user.sh
-
 # pool
-POOL_FILE="/etc/php/7.4/fpm/pool.d/${USER}.conf"
+POOL_FILE="/etc/php/${PHP_VERSION}/fpm/pool.d/${USER}.conf"
 . ./operations/create-fpm-pool.sh
 
 # nginx conf

@@ -7,9 +7,9 @@ heading 'Prepare to start...'
 lsb_release -a
 
 heading 'Updating Ubuntu...'
-apt-update ## >/dev/null 2>&1
-apt-upgrade ## >/dev/null 2>&1
-apt-dist-upgrade ## >/dev/null 2>&1
+apt-update
+apt-upgrade
+apt-dist-upgrade
 apt-install update-manager-core
 sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
@@ -19,11 +19,12 @@ sudo add-apt-repository -y ppa:ondrej/nginx ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:ondrej/php ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:ondrej/apache2 ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:chris-lea/redis-server ## >/dev/null 2>&1
+sudo add-apt-repository -y ppa:certbot/certbot ## >/dev/null 2>&1
 
 # do one more update run after repos added
-apt-update ## >/dev/null 2>&1
-apt-upgrade ## >/dev/null 2>&1
-apt-dist-upgrade ## >/dev/null 2>&1
+apt-update
+apt-upgrade
+apt-dist-upgrade
 
 # hold the pending kernel update warnning
 sudo apt-mark hold linux-image-generic ## >/dev/null 2>&1
@@ -94,14 +95,15 @@ sudo a2enconf php7.4-fpm php8.0-fpm php8.1-fpm php8.2-fpm
 # sudo cp /etc/apache2/mods-available/fastcgi.conf /etc/apache2/mods-available/fastcgi.conf.backup
 # sudo cp ./stubs/fastcgi.conf -rf /etc/apache2/mods-available/fastcgi.conf
 
-update-alternatives --set php $(update-alternatives --list php | tail -n 1) ## >/dev/null 2>&1
+sudo update-alternatives --set php $(update-alternatives --list php | tail -n 1) ## >/dev/null 2>&1
 php -v
 
 heading "Install Nginx..."
 apt-install nginx
-sudo rm /etc/nginx/sites-enabled/default
+# sudo rm /etc/nginx/sites-enabled/default
 sudo ufw allow 'Nginx Full' ## >/dev/null 2>&1
 sudo ufw --force enable ## >/dev/null 2>&1
+sudo netstat -tlpn
 
 heading "Install rpaf..."
 sudo wget https://github.com/gnif/mod_rpaf/archive/stable.zip
@@ -136,7 +138,7 @@ DB_ROOT_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 
 sudo cp ./stubs/my.conf $MYSQL_ROOT_CONF_FILE
 sudo chown root: $MYSQL_ROOT_CONF_FILE
 sudo sed -i "s/{{PASSWORD}}/${DB_ROOT_PASSWORD}/g" $MYSQL_ROOT_CONF_FILE
-sudo sed -i "s/{{USER}}/${USER}/g" $MYSQL_ROOT_CONF_FILE
+sudo sed -i "s/{{USER}}/root/g" $MYSQL_ROOT_CONF_FILE
 
 MYSQL_CONF_FILE="$HOME/.my.cnf"
 DB_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
@@ -145,11 +147,12 @@ sudo chown root: $MYSQL_CONF_FILE
 sudo sed -i "s/{{PASSWORD}}/${DB_PASSWORD}/g" $MYSQL_CONF_FILE
 sudo sed -i "s/{{USER}}/${USER}/g" $MYSQL_CONF_FILE
 
-sudo mysql -e "ALTER USER root@localhost IDENTIFIED BY '${DB_ROOT_PASSWORD}'"
-sudo mysql -e "DROP USER ''@'localhost'"
-sudo mysql -e "DROP USER ''@'$(hostname)'"
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${DB_ROOT_PASSWORD}'"
+sudo mysql -e "DELETE FROM mysql.user WHERE User=''"
+sudo mysql -e "UPDATE mysql.user SET Host='localhost' WHERE User='root' AND Host='%'"
 sudo mysql -e "DROP DATABASE IF EXISTS test"
-sudo mysql -e "FLUSH PRIVILEGES"
+sudo mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+sudo mysql -e "FLUSH PRIVILEGES;"
 
 sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${DB_PASSWORD}';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${USER}'@'localhost' WITH GRANT OPTION;"
@@ -166,13 +169,14 @@ nvm install node # no sudo...
 heading "Install cacheing related..."
 apt-install redis-server memcached
 sudo systemctl enable redis-server
+sudo systemctl enable memcached
 
 heading "Install LetsEncrypt..."
-sudo apt-get install -y certbot python3-certbot-nginx
+apt-install certbot python3-certbot-nginx python3-certbot-dns-cloudflare
 sudo cp ./stubs/cron-certbot /etc/cron.d/certbot
 
 heading "Generate dhparam.pem..."
-sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 3072
 
 heading "Install WP Cli..."
 sudo curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -203,7 +207,7 @@ retest
 restart
 
 # release the pending kernel update warnning
-# sudo apt-mark unhold linux-image-generic ## >/dev/null 2>&1
+sudo apt-mark unhold linux-image-generic ## >/dev/null 2>&1
 # sudo rm -Rf /etc/apt/apt.conf
 # sudo rm -Rf /etc/needrestart/conf.d/kernelhints.conf
 # sudo rm -Rf /etc/needrestart/conf.d/restart.conf

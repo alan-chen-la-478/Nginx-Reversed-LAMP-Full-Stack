@@ -17,7 +17,7 @@ else
     sudo sed -i "s/{{DOMAIN}}/${DOMAIN}/g" $CONF_FILE
     sudo sed -i "s#{{SERVED_PATH}}#${SERVED_PATH}#g" $CONF_FILE
     sudo sed -i "s#{{ROOT}}#${VHOST_PATH}#g" $CONF_FILE
-    sudo sed -i "s#{{SOCKET}}#/var/run/php/php7.4-fpm-${USER}.sock#g" $CONF_FILE
+    sudo sed -i "s#{{SOCKET}}#/var/run/php/php${PHP_VERSION}-fpm-${USER}.sock#g" $CONF_FILE
 
     echo "$CONF_FILE created."
 fi
@@ -37,7 +37,7 @@ else
     sudo sed -i "s/{{DOMAIN}}/${DOMAIN}/g" $APACHE_FILE
     sudo sed -i "s#{{SERVED_PATH}}#${SERVED_PATH}#g" $APACHE_FILE
     sudo sed -i "s#{{ROOT}}#${VHOST_PATH}#g" $APACHE_FILE
-    sudo sed -i "s#{{SOCKET}}#/var/run/php/php7.4-fpm-${USER}.sock#g" $APACHE_FILE
+    sudo sed -i "s#{{SOCKET}}#/var/run/php/php${PHP_VERSION}-fpm-${USER}.sock#g" $APACHE_FILE
 
     echo "'$APACHE_FILE' created."
 fi
