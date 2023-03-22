@@ -4,10 +4,10 @@ if [ "$SSL" = true ] ; then
     echo "$(tput setaf 2)$(tput bold)Creating SSL certificates... $(tput sgr 0)"
 
     if [ "$LETSENCRYPT_TYPE" = 'http' ] ; then
-        sudo certbot certonly --nginx -d ${DOMAIN} --agree-tos
+        sudo certbot certonly --nginx -d ${DOMAIN} --agree-tos --register-unsafely-without-email
 
         if [ "$WWW" = true ]; then
-            sudo certbot certonly --nginx -d "www.${DOMAIN}" --agree-tos
+            sudo certbot certonly --nginx -d "www.${DOMAIN}" --agree-tos --register-unsafely-without-email
         fi
     fi
 
@@ -18,10 +18,10 @@ if [ "$SSL" = true ] ; then
         sudo chmod 600 $LETSENCRYPT_INI_FILE
         sudo sed -i "s/{{TOKEN}}/${LETSENCRYPT_TOKEN}/g" $LETSENCRYPT_INI_FILE
 
-        sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials $LETSENCRYPT_INI_FILE -d ${DOMAIN} --agree-tos
+        sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials $LETSENCRYPT_INI_FILE -d ${DOMAIN} --agree-tos --register-unsafely-without-email
 
         if [ "$WWW" = true ]; then
-            sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials $LETSENCRYPT_INI_FILE -d "www.${DOMAIN}" --agree-tos
+            sudo certbot certonly --dns-cloudflare --dns-cloudflare-credentials $LETSENCRYPT_INI_FILE -d "www.${DOMAIN}" --agree-tos --register-unsafely-without-email
         fi
     fi
 
@@ -40,8 +40,7 @@ if [ "$SSL" = true ] ; then
     sudo sed -i "s/# ssl_trusted_certificate /ssl_trusted_certificate /g" $CONF_FILE
     sudo sed -i "s/# include snippets\/nginx-ssl.conf/include snippets\/nginx-ssl.conf/g" $CONF_FILE
 
-    retest
-    reload
+    reload-libs
 
     echo "'SSL Certivicates' created."
 fi

@@ -100,6 +100,7 @@ php -v
 
 heading "Install Nginx..."
 apt-install nginx
+sudo systemctl enable nginx
 # sudo rm /etc/nginx/sites-enabled/default
 sudo ufw allow 'Nginx Full' ## >/dev/null 2>&1
 sudo ufw --force enable ## >/dev/null 2>&1

@@ -28,7 +28,7 @@ wait-for() {
 apt-command() {
     export DEBIAN_FRONTEND=noninteractive
     export DEBIAN_PRIORITY=critical
-    sudo apt --yes --quiet --option Dpkg::Options::=--force-confold --option Dpkg::Options::=--force-confdef "$@" >/dev/null 2>&1
+    sudo apt --yes --quiet --option Dpkg::Options::=--force-confold --option Dpkg::Options::=--force-confdef "$@" >output.txt 2>&1
 }
 
 apt-install() {
@@ -54,4 +54,20 @@ install-php() {
     apt-install php${VERSION}-bcmath php${VERSION}-zip php${VERSION}-mbstring php${VERSION}-xml php${VERSION}-imap
     apt-install php${VERSION}-gd php${VERSION}-imagick
     apt-install php${VERSION}-memcached php${VERSION}-opcache
+}
+
+reload-libs() {
+    sudo apachectl -t
+    sudo nginx -t
+    sudo php-fpm7.4 -t
+    sudo php-fpm8.0 -t
+    sudo php-fpm8.1 -t
+    sudo php-fpm8.2 -t
+
+    sudo service apache2 reload
+    sudo service nginx reload
+    sudo service php7.4-fpm reload
+    sudo service php8.0-fpm reload
+    sudo service php8.1-fpm reload
+    sudo service php8.2-fpm reload
 }
