@@ -5,6 +5,14 @@ heading() {
     echo "$(tput setaf 2)$(tput bold)${1}$(tput sgr 0)"
 }
 
+function prompt_input {
+    local MESSAGE="${1}: "
+    local ADDITIONAL_ARGS=${2}
+    local TIMEOUT=${3:-5}
+    read -t $TIMEOUT $ADDITIONAL_ARGS -p "${MESSAGE}" input
+    echo $input
+}
+
 wait-for() {
     local input
     while true; do

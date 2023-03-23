@@ -2,8 +2,23 @@
 
 if [ -z "$(getent passwd $USER)" ]; then
     echo "$(tput setaf 2)$(tput bold)Creating New User... $(tput sgr 0)"
-    sudo adduser --gecos "" $USER
+
+    RANDOM_PASSWORD=$(openssl rand -base64 12)
+    PASSWORD=$(prompt_input "Enter a password (leave empty to generate random one): " "-s");
+    if [ -z "$PASSWORD" ]; then
+        PASSWORD=$RANDOM_PASSWORD
+    fi
+
+    ecoh "";
+    sudo adduser --gecos "" --disabled-password $USER
+    echo "$USER:$PASSWORD" | sudo chpasswd
     sudo usermod -d $HOME_DIR $USER
+
+    if [ "$RANDOM_PASSWORD" = "$PASSWORD" ]; then
+        USER_PASSWD_FILE=$HOME_DIR/.sshpwd
+        echo $PASSWORD | sudo tee $USER_PASSWD_FILE ## >/dev/null 2>&1
+        echo "Password Generated: $(tput bold)${USER_PASSWD_FILE}$(tput sgr 0)";
+    fi
 
     if [ "$SSH" = false ] ; then
         sudo usermod -s /bin/false $USER # disable ssh

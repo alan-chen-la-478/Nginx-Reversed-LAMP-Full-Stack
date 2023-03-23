@@ -4,13 +4,22 @@
 
 heading 'Checking for secondary sudo user...'
 
-USERNAME=$(wait-for "Enter a secondary admin username (default: serveradmin): " "serveradmin");
+USERNAME=$(prompt_input "Enter a secondary admin username (default: serveradmin): ");
+
+if [ -z "$USERNAME" ]; then
+    echo ""
+    USERNAME="serveradmin"
+fi
 
 if [ $(grep -ic $USERNAME /etc/passwd) = 0 ];
 then
     echo "Secondary admin $(tput bold)${USERNAME}$(tput sgr 0) not found, creating..."
     RANDOM_PASSWORD=$(openssl rand -base64 12)
-    PASSWORD=$(wait-for "Enter a password (leave empty to generate random one): " $RANDOM_PASSWORD true);
+    PASSWORD=$(prompt_input "Enter a password (leave empty to generate random one): " "-s");
+    if [ -z "$PASSWORD" ]; then
+        PASSWORD=$RANDOM_PASSWORD
+    fi
+
     echo '';
 
     adduser --gecos "" --disabled-password $USERNAME ## >/dev/null 2>&1

@@ -198,7 +198,9 @@ sudo apt-get -y autoremove
 apt-update
 apt-upgrade
 apt-dist-upgrade
-retest
-restart
+reload-libs
+
+sudo systemctl list-jobs
+sudo systemctl daemon-reexec
 
 sudo netstat -tlpn
