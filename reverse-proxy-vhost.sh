@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # configurations
-DOMAIN=test6.devssite.work
-USER=devssite
+DOMAIN=test5.devssite.work
+USER=devssite5
 WWW=false
 SSH=false
 SFTP=true
@@ -11,8 +11,8 @@ PROTECTED=false
 HOME_DIR="/var/www/${USER}/"
 VHOST_DIR="${DOMAIN}/"
 SERVED_DIR=
-DB_NAME=test1
-PHP_VERSION=8.2
+DB_NAME=test5
+PHP_VERSION=8.1
 LETSENCRYPT_TYPE=dns
 LETSENCRYPT_TOKEN=xxx
 WORDPRESS=true
@@ -20,6 +20,13 @@ WORDPRESS_ADMIN=test4_devssite
 WORDPRESS_EMAIL="no-reply@${DOMAIN}"
 
 # ===============
+sudo -v
+
+VHOST_PATH="${HOME_DIR}${VHOST_DIR}"
+SERVED_PATH="${VHOST_PATH}public_html/${SERVED_DIR}"
+POOL_FILE="/etc/php/${PHP_VERSION}/fpm/pool.d/${USER}.conf"
+CONF_FILE="/etc/nginx/sites-available/${DOMAIN}"
+APACHE_FILE="/etc/apache2/sites-available/${DOMAIN}.conf"
 
 . ./helpers.sh
 
@@ -27,17 +34,12 @@ WORDPRESS_EMAIL="no-reply@${DOMAIN}"
 . ./operations/create-user.sh
 
 # path
-VHOST_PATH="${HOME_DIR}${VHOST_DIR}"
-SERVED_PATH="${VHOST_PATH}public_html/${SERVED_DIR}"
 . ./operations/create-path.sh
 
 # pool
-POOL_FILE="/etc/php/${PHP_VERSION}/fpm/pool.d/${USER}.conf"
 . ./operations/create-fpm-pool.sh
 
 # nginx conf
-CONF_FILE="/etc/nginx/sites-available/${DOMAIN}"
-APACHE_FILE="/etc/apache2/sites-available/${DOMAIN}.conf"
 . ./operations/create-apache-nginx-conf.sh
 
 # database

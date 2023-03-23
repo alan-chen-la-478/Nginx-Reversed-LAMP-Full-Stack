@@ -2,6 +2,8 @@
 
 if [ -z "$(getent passwd $USER)" ]; then
     echo "$(tput setaf 2)$(tput bold)Creating New User... $(tput sgr 0)"
+    sudo mkdir -p $SERVED_PATH
+    sudo mkdir -p "${VHOST_PATH}logs"
 
     RANDOM_PASSWORD=$(openssl rand -base64 12)
     PASSWORD=$(prompt_input "Enter a password (leave empty to generate random one): " "-s");
@@ -9,13 +11,13 @@ if [ -z "$(getent passwd $USER)" ]; then
         PASSWORD=$RANDOM_PASSWORD
     fi
 
-    ecoh "";
+    echo "";
     sudo adduser --gecos "" --disabled-password $USER
     echo "$USER:$PASSWORD" | sudo chpasswd
     sudo usermod -d $HOME_DIR $USER
 
     if [ "$RANDOM_PASSWORD" = "$PASSWORD" ]; then
-        USER_PASSWD_FILE=$HOME_DIR/.sshpwd
+        USER_PASSWD_FILE=$HOME_DIR.sshpwd
         echo $PASSWORD | sudo tee $USER_PASSWD_FILE ## >/dev/null 2>&1
         echo "Password Generated: $(tput bold)${USER_PASSWD_FILE}$(tput sgr 0)";
     fi

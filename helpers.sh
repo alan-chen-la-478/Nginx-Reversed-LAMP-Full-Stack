@@ -6,7 +6,7 @@ heading() {
 }
 
 function prompt_input {
-    local MESSAGE="${1}: "
+    local MESSAGE=${1}
     local ADDITIONAL_ARGS=${2}
     local TIMEOUT=${3:-5}
     read -t $TIMEOUT $ADDITIONAL_ARGS -p "${MESSAGE}" input
