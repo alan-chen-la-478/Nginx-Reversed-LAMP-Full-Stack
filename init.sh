@@ -35,11 +35,17 @@ then
     echo "%pwdfree ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/pwdfree ## >/dev/null 2>&1
 fi
 
-usermod -aG pwdfree $USERNAME ## >/dev/null 2>&1
+usermod -aG pwdfree $USERNAME
+USER_HOMEDIR=$(getent passwd $USERNAME | cut -d: -f6)
+sudo -u $USERNAME git clone --branch temp https://github.com/alan-chen-la-478/Nginx-Reversed-LAMP-Full-Stack.git $USER_HOMEDIR/server-setup
+sudo chown $USERNAME: -R $USER_HOMEDIR/server-setup
 sudo -u $USERNAME bash ./install.sh
-deluser $USERNAME pwdfree ## >/dev/null 2>&1
+deluser $USERNAME pwdfree
 
-sudo systemctl start fail2ban
-sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
+sudo rm -Rf ~/server-setup
 
-heading '✨ DONE!!'
+# sudo systemctl start fail2ban
+# sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
+
+heading '✨ DONE!! Rebooting... Please login with your new user after reboot'
+sudo reboot

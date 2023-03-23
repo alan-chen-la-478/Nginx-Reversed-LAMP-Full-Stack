@@ -14,7 +14,7 @@ apt-install update-manager-core
 sudo do-release-upgrade -f DistUpgradeViewNonInteractive
 
 heading 'Update apt repositories...'
-sudo apt-get install -y software-properties-common
+apt-install -y software-properties-common
 sudo add-apt-repository -y ppa:ondrej/nginx ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:ondrej/php ## >/dev/null 2>&1
 sudo add-apt-repository -y ppa:ondrej/apache2 ## >/dev/null 2>&1
@@ -26,19 +26,11 @@ apt-update
 apt-upgrade
 apt-dist-upgrade
 
-# hold the pending kernel update warnning
-sudo apt-mark hold linux-image-generic ## >/dev/null 2>&1
-# echo 'APT::ExtractTemplates::TempDir "/dev/null";' | sudo tee /etc/apt/apt.conf ## >/dev/null 2>&1
-# echo 'APT::ExtractTemplates::TempDir "/dev/null";' | sudo tee /etc/apt/apt.conf ## >/dev/null 2>&1
-# echo '$nrconf{kernelhints} = -1;' | sudo tee /etc/needrestart/conf.d/kernelhints.conf ## >/dev/null 2>&1
-# echo '$nrconf{restart} = "a";' | sudo tee /etc/needrestart/conf.d/restart.conf ## >/dev/null 2>&1
-
-
 heading "Install fail2ban and adding your current IP: $(who -m | awk '{print $NF}'), into sshd whitelist..."
 apt-install fail2ban unattended-upgrades landscape-common net-tools
-sudo systemctl enable fail2ban
 sudo systemctl start fail2ban
-# sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
+sudo systemctl enable fail2ban
+sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
 
 heading "Setup ufw Firewall..."
 apt-install ufw
@@ -169,6 +161,8 @@ nvm install node # no sudo...
 
 heading "Install cacheing related..."
 apt-install redis-server memcached
+sudo systemctl start redis-server
+sudo systemctl start memcached
 sudo systemctl enable redis-server
 sudo systemctl enable memcached
 
@@ -206,11 +200,5 @@ apt-upgrade
 apt-dist-upgrade
 retest
 restart
-
-# release the pending kernel update warnning
-sudo apt-mark unhold linux-image-generic ## >/dev/null 2>&1
-# sudo rm -Rf /etc/apt/apt.conf
-# sudo rm -Rf /etc/needrestart/conf.d/kernelhints.conf
-# sudo rm -Rf /etc/needrestart/conf.d/restart.conf
 
 sudo netstat -tlpn

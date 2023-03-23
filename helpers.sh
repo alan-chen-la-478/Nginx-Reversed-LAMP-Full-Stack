@@ -28,7 +28,8 @@ wait-for() {
 apt-command() {
     export DEBIAN_FRONTEND=noninteractive
     export DEBIAN_PRIORITY=critical
-    sudo apt --yes --quiet --option Dpkg::Options::=--force-confold --option Dpkg::Options::=--force-confdef "$@" >/dev/null 2>&1
+    # sudo DEBIAN_FRONTEND=noninteractive apt --yes --quiet --option Dpkg::Options::=--force-confold --option Dpkg::Options::=--force-confdef "$@" >/dev/null 2>&1
+    sudo DEBIAN_FRONTEND=noninteractive apt --yes --quiet "$@"
 }
 
 apt-install() {
