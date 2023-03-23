@@ -18,7 +18,7 @@ if [ -z "$(getent passwd $USER)" ]; then
     MYSQL_CONF_FILE="${HOME_DIR}.my.cnf"
     NEW_UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
-    sudo cp ./stubs/my.conf $MYSQL_CONF_FILE
+    sudo cp -R ./stubs/my.conf $MYSQL_CONF_FILE
     sudo chown root: $MYSQL_CONF_FILE
     sudo sed -i "s/{{PASSWORD}}/${NEW_UUID}/g" $MYSQL_CONF_FILE
     sudo sed -i "s/{{USER}}/${USER}/g" $MYSQL_CONF_FILE

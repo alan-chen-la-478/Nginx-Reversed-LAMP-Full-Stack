@@ -183,7 +183,7 @@ echo "alias retest=\"sudo apachectl -t; sudo nginx -t; sudo php-fpm7.4 -t; sudo 
 echo "alias reload=\"sudo service apache2 reload;sudo service nginx reload;sudo service php7.4-fpm reload;sudo service php8.0-fpm reload;sudo service php8.1-fpm reload;sudo service php8.2-fpm reload;\"" | sudo tee -a /etc/profile.d/shared-alias.sh
 echo "alias restart=\"sudo service apache2 restart; sudo service nginx restart; sudo service php7.4-fpm restart;sudo service php8.0-fpm restart;sudo service php8.1-fpm restart;sudo service php8.2-fpm restart;\"" | sudo tee -a /etc/profile.d/shared-alias.sh
 echo "alias stats=\"landscape-sysinfo\"" | sudo tee -a /etc/profile.d/shared-alias.sh
-source /etc/profile.d/shared-alias.sh
+. /etc/profile.d/shared-alias.sh
 
 heading "Copy Nginx snippets..."
 sudo cp ./snippets/nginx-gzip.conf /etc/nginx/snippets/nginx-gzip.conf

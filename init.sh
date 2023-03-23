@@ -19,7 +19,7 @@ then
 
     if [ "$RANDOM_PASSWORD" = "$PASSWORD" ]; then
         USER_HOMEDIR=$(getent passwd $USERNAME | cut -d: -f6)
-        USER_PASSWD_FILE=$USER_HOMEDIR/.sshpw
+        USER_PASSWD_FILE=$USER_HOMEDIR/.sshpwd
         echo $PASSWORD | sudo tee $USER_PASSWD_FILE ## >/dev/null 2>&1
         echo "Password Generated: $(tput bold)${USER_PASSWD_FILE}$(tput sgr 0)";
     fi
