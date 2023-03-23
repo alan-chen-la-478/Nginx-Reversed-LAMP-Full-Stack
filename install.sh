@@ -51,6 +51,8 @@ sudo cp ./stubs/sftpUsers.conf /etc/ssh/sshd_config.d/sftpUsers.conf
 sudo sed -i "s#/usr/lib/openssh/sftp-server#internal-sftp#g" /etc/ssh/sshd_config
 sudo service ssh reload
 
+apt-dist-upgrade
+
 heading "Install Apache..."
 apt-install apache2 build-essential apache2-dev apache2-utils
 
@@ -65,6 +67,8 @@ sudo a2enconf server-name ## >/dev/null 2>&1
 sudo a2dissite 000-default ## >/dev/null 2>&1
 sudo hostnamectl set-hostname localhost
 sudo service apache2 restart
+
+apt-dist-upgrade
 
 heading "Install PHP 7.4..."
 install-php 7.4
@@ -89,6 +93,8 @@ sudo a2enconf php7.4-fpm php8.0-fpm php8.1-fpm php8.2-fpm
 
 sudo update-alternatives --set php $(update-alternatives --list php | tail -n 1) ## >/dev/null 2>&1
 php -v
+
+apt-dist-upgrade
 
 heading "Install Nginx..."
 apt-install nginx
@@ -122,6 +128,8 @@ sudo service php8.1-fpm restart
 sudo service php8.2-fpm restart
 sudo service apache2 restart
 
+apt-dist-upgrade
+
 heading "Install MySQL..."
 echo "$(tput setaf 2)$(tput bold)Install Mysql... $(tput sgr 0)"
 apt-install mysql-server
@@ -150,6 +158,8 @@ sudo mysql -e "FLUSH PRIVILEGES;"
 sudo mysql -e "CREATE USER IF NOT EXISTS '${USER}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${DB_PASSWORD}';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${USER}'@'localhost' WITH GRANT OPTION;"
 sudo mysql -e "FLUSH PRIVILEGES;"
+
+apt-dist-upgrade
 
 heading "Install Node via NVM..."
 apt-install build-essential libssl-dev
