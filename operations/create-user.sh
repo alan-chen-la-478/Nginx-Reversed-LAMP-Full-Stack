@@ -22,6 +22,7 @@ if [ -z "$(getent passwd $USER)" ]; then
 
     if [ "$SSH" = false ] ; then
         sudo usermod -s /bin/false $USER # disable ssh
+        # sudo usermod -s /bin/bash $USER
     fi
 
     if [ "$SFTP" = true ] ; then
