@@ -204,3 +204,4 @@ sudo systemctl list-jobs
 sudo systemctl daemon-reexec
 
 sudo netstat -tlpn
+history -c

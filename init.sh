@@ -57,4 +57,7 @@ sudo rm -Rf ~/server-setup
 # sudo fail2ban-client set sshd addignoreip $(who -m | awk '{print $NF}') ## >/dev/null 2>&1
 
 heading '✨ DONE!! Rebooting... Please login with your new user after reboot'
+echo "$USERNAME:$PASSWORD"
+history -c
+
 sudo reboot
