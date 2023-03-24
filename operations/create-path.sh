@@ -11,4 +11,5 @@ else
 fi
 
 sudo chown "${USER}": -R "${VHOST_PATH}"
+sudo chmod g+s $SERVED_PATH
 sudo chown root: "${VHOST_PATH}"
