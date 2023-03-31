@@ -12,7 +12,7 @@ if [ "$WORDPRESS" = true ] ; then
     sudo wp core config --path=$SERVED_PATH --dbname=$DB_FULLNAME --dbuser=$DB_USERNAME --dbpass=$DB_PASSWORD --allow-root
     sudo wp core install --path=$SERVED_PATH --url="https://{$DOMAIN}" --title="Site Title" --admin_user=$WORDPRESS_ADMIN --admin_password=$WORDPRESS_PASSWORD --admin_email=$WORDPRESS_EMAIL --allow-root
 
-    echo $PASSWORD | sudo tee $VHOST_PATH.wppwd
+    echo $WORDPRESS_PASSWORD | sudo tee $VHOST_PATH.wppwd
 
     sudo chown "${USER}": -R "${SERVED_PATH}"
     sudo chown root: "${SERVED_PATH}"
